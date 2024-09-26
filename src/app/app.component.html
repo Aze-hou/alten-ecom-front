@@ -1,0 +1,53 @@
+<p-toolbar [style]="{ height: '100px' }">
+    <div class="p-toolbar-group-start">
+        <img src="assets/icons/icon-72x72.png" alt="logo" />
+    </div>
+    <div class="p-toolbar-group-center">
+        {{ title }}
+    </div>
+    <div class="p-toolbar-group-end" >
+        <i class="pi pi-shopping-cart" (click) = "showCard()" style="font-size: 2rem"></i>
+        <p-badge *ngIf="cartItemCount > 0"  [value]="cartItemCount" />
+    </div>
+</p-toolbar>
+<p-splitter 
+    [panelSizes]="[20, 80]" 
+    [style]="{ height: 'calc(100vh - 100px)' }">
+    <ng-template pTemplate>
+        <div class="w-full">
+            <app-panel-menu />
+        </div>
+    </ng-template>
+    <ng-template pTemplate>
+        <div class="w-full app-content">
+            <router-outlet></router-outlet>
+        </div>
+    </ng-template>
+</p-splitter>
+
+<p-dialog [(visible)]="isDialogVisible"
+    [style]="{ width: '50vw' }"
+    header="Mon Panier">
+   
+    <p-dataView #dv [value]="cardProducts()">
+        <ng-template pTemplate="list" let-products>
+            @for (product of products; track product) {
+                <p-card class="block mb-2">
+                    <span class="font-medium text-secondary text-sm">{{ product.category }}</span>
+                    <div class="text-lg font-medium text-900 mt-2">Name : {{ product.name }}</div>
+                    <!-- <div class="text-lg font-medium text-900 mt-2">Code : {{ product.code }}</div> -->
+                    <div class="text-lg font-medium text-900 mt-2">Price : {{ product.price }}</div>
+                    <div class="text-lg font-medium text-900 mt-2">Quantity :  <input pInputText type="number" id="quantity" name="quantity"
+                        [(ngModel)]="product.quantity " required></div>
+                  
+                    <ng-template pTemplate="footer">
+                        <div class="flex gap-3 mt-1">
+                            <p-button label="supprimer panier" severity="info" (onClick)="deleteFromCart(product)" />
+
+                        </div>
+                    </ng-template>
+                </p-card>
+            }
+        </ng-template>
+    </p-dataView>
+</p-dialog>
